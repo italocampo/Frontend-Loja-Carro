@@ -8,7 +8,6 @@ import {
 import { api } from "../lib/api";
 import type { User } from "../types";
 
-// Define o formato do nosso contexto de autenticação
 interface AuthContextType {
   user: User | null;
   login: (email: string, senha: string) => Promise<void>;
@@ -16,10 +15,8 @@ interface AuthContextType {
   isLoading: boolean;
 }
 
-// Cria o contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Cria o "Provedor" que irá encapsular nossa aplicação
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,26 +37,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, senha: string) => {
-    const response = await api.post<{ user: User; accessToken: string }>(
-      "/auth/login",
-      { email, senha }
-    );
+    try {
+      const response = await api.post<{ user: User }>("/auth/login", {
+        email,
+        senha,
+      });
 
-    const { user, accessToken } = response.data;
-
-    if (accessToken) {
-      localStorage.setItem("accessToken", accessToken);
-    }
-
-    if (user) {
-      setUser(user);
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("Erro no login:", error);
+      throw error;
     }
   };
 
   const logout = async () => {
-    await api.post("/auth/logout");
-    setUser(null);
-    localStorage.removeItem("accessToken");
+    try {
+      await api.post("/auth/logout");
+      setUser(null);
+    } catch (error) {
+      console.error("Erro no logout:", error);
+    }
   };
 
   return (
@@ -69,7 +66,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook customizado para facilitar o uso do contexto
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
