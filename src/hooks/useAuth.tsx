@@ -38,12 +38,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, senha: string) => {
     try {
-      const response = await api.post<{ user: User }>("/auth/login", {
+      // A resposta da API é o próprio objeto User, não { user: User }
+      const response = await api.post<User>("/auth/login", {
         email,
         senha,
       });
 
-      setUser(response.data.user);
+      // --- CORREÇÃO APLICADA AQUI ---
+      // Define o usuário diretamente com os dados da resposta
+      setUser(response.data);
+      
     } catch (error) {
       console.error("Erro no login:", error);
       throw error;
