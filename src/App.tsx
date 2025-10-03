@@ -5,6 +5,7 @@ import { Catalogo } from "./pages/Catalogo";
 import { Login } from "./pages/Login";
 import { Admin } from "./pages/Admin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { CarForm } from "./pages/CarForm";
 
 function App() {
   return (
@@ -17,19 +18,37 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* Rotas Protegidas */}
-          <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               <ProtectedRoute>
                 <Admin />
               </ProtectedRoute>
-            } 
+            }
+          />
+          
+          {/* 2. Novas rotas adicionadas */}
+          <Route
+            path="/admin/carros/novo"
+            element={
+              <ProtectedRoute>
+                <CarForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/carros/editar/:id"
+            element={
+              <ProtectedRoute>
+                <CarForm />
+              </ProtectedRoute>
+            }
           />
         </Routes>
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
