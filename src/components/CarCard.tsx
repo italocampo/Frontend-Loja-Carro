@@ -1,22 +1,21 @@
 import type { Car } from "../types";
 import { Calendar, Gauge, Tag } from "lucide-react";
 
-// O componente recebe uma propriedade 'carro' do tipo Car
 interface CarCardProps {
   carro: Car;
 }
 
 export function CarCard({ carro }: CarCardProps) {
-  // Procura pela imagem de capa no array de imagens do carro
-  const capaUrl = carro.images.find(img => img.capa)?.url;
+  // --- AJUSTE APLICADO AQUI ---
+  // Acessa a URL da primeira imagem no array, se ela existir.
+  // A sintaxe `?.[0]` verifica com segurança se o array existe e tem um primeiro item.
+  const capaUrl = carro.images?.[0]?.url;
 
-  // Formata o preço para o padrão brasileiro (R$ 105.000,00)
   const precoFormatado = (carro.precoCentavos / 100).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
 
-  // Formata a quilometragem
   const kmFormatado = carro.km.toLocaleString('pt-BR');
 
   return (

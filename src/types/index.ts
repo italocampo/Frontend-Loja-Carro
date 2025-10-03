@@ -12,6 +12,7 @@ export interface CarImage {
   id: string;
   url: string;
   capa: boolean;
+  storagePath: string; 
 }
 
 export interface Car {
@@ -22,13 +23,12 @@ export interface Car {
   km: number;
   precoCentavos: number;
   images: CarImage[];
-  // --- CAMPOS ADICIONADOS PARA ALINHAR COM O FORMULÁRIO ---
   modelo: string;
   cor: string;
   portas: number;
   cambio: Cambio;
   combustivel: Combustivel;
-  descricao: string | null; // Pode ser nulo se não houver descrição
+  descricao: string | null;
 }
 
 export interface User {
