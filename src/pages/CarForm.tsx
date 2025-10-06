@@ -4,6 +4,7 @@ import { Car as CarIcon, UploadCloud, XCircle } from "lucide-react";
 import { useDropzone } from 'react-dropzone';
 import { api } from "../lib/api";
 import type { Car } from "../types";
+import toast  from "react-hot-toast";
 
 interface ImageFile extends File {
   preview: string;
@@ -122,17 +123,17 @@ export function CarForm() {
         // --- CORREÇÃO 1 APLICADA AQUI ---
         // Remova o objeto 'headers'. O navegador definirá o Content-Type corretamente.
         await api.patch(`/cars/${id}`, data);
-        alert('Carro atualizado com sucesso!');
+        toast.success('Carro atualizado com sucesso!');
       } else {
         // --- CORREÇÃO 1 APLICADA AQUI ---
         // Remova o objeto 'headers'. O navegador definirá o Content-Type corretamente.
         await api.post('/cars', data);
-        alert('Carro cadastrado com sucesso!');
+        toast.success('Carro cadastrado com sucesso!');
       }
       navigate('/admin');
     } catch (error) {
       console.error("Erro ao salvar carro:", error);
-      alert('Falha ao salvar o carro. Verifique os dados e tente novamente.');
+      toast.error('Falha ao salvar o carro. Verifique os dados.');
     }
   }
 

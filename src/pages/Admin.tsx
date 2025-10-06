@@ -4,6 +4,7 @@ import type { Car } from "../types";
 import { api } from "../lib/api";
 import { Edit, PlusCircle, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export function Admin() {
   const { user } = useAuth();
@@ -31,7 +32,7 @@ export function Admin() {
   async function handleDelete(carroId: string) {
     if (
       !window.confirm(
-        "Tem certeza que deseja apagar este carro? Esta ação não pode ser desfeita."
+        "Tem certeza que deseja apagar este carro?"
       )
     ) {
       return;
@@ -42,9 +43,9 @@ export function Admin() {
       setCarros((carrosAtuais) =>
         carrosAtuais.filter((carro) => carro.id !== carroId)
       );
-      alert("Carro apagado com sucesso!");
+      toast.success("Carro apagado com sucesso!")
     } catch (err) {
-      alert("Erro ao apagar o carro. Tente novamente.");
+      toast.error("Erro ao apagar o carro. Tente novamente.");
       console.error(err);
     }
   }
