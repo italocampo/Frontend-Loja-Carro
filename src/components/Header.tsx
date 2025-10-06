@@ -19,8 +19,8 @@ export function Header() {
           <span>Paulo Ney Veículos</span>
         </Link>
         <div className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-gray-600 hover:text-blue-600">Catálogo</Link>
-          {user && <Link to="/admin" className="text-gray-600 hover:text-blue-600">Admin</Link>}
+          <Link to="/" className="text-gray-600 hover:text-blue-600">Página Inicial</Link>
+          {user && <Link to="/admin" className="text-gray-600 hover:text-blue-600">Painel de Gestão</Link>}
         </div>
         <div>
           {user ? (
