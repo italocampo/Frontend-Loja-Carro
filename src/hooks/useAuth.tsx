@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await api.get<User>("/auth/me");
         setUser(response.data);
       } catch (error) {
-        console.error("Falha ao verificar a sessão do usuário:", error);
+      console.error("Falha ao verificar a sessão do usuário:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
