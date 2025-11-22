@@ -1,13 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
-import {Toaster} from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { Catalogo } from "./pages/Catalogo";
 import { Login } from "./pages/Login";
 import { Admin } from "./pages/Admin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { CarForm } from "./pages/CarForm";
 import { CarDetail } from "./pages/CarDetail";
+import { AdminUsers } from "./pages/AdminUsers";
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
         <Routes>
           {/* Rotas Públicas */}
           <Route path="/" element={<Catalogo />} />
-          <Route path="/carros/:id" element={<CarDetail />} /> 
+          <Route path="/carros/:id" element={<CarDetail />} />
           <Route path="/login" element={<Login />} />
 
           {/* Rotas Protegidas */}
@@ -30,7 +31,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* 2. Novas rotas adicionadas */}
           <Route
             path="/admin/carros/novo"
@@ -45,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CarForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <AdminUsers />
               </ProtectedRoute>
             }
           />

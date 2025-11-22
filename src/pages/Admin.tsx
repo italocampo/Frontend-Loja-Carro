@@ -30,11 +30,7 @@ export function Admin() {
   }, []);
 
   async function handleDelete(carroId: string) {
-    if (
-      !window.confirm(
-        "Tem certeza que deseja apagar este carro?"
-      )
-    ) {
+    if (!window.confirm("Tem certeza que deseja apagar este carro?")) {
       return;
     }
 
@@ -43,7 +39,7 @@ export function Admin() {
       setCarros((carrosAtuais) =>
         carrosAtuais.filter((carro) => carro.id !== carroId)
       );
-      toast.success("Carro apagado com sucesso!")
+      toast.success("Carro apagado com sucesso!");
     } catch (err) {
       toast.error("Erro ao apagar o carro. Tente novamente.");
       console.error(err);
@@ -57,13 +53,21 @@ export function Admin() {
           <h1 className="text-3xl font-bold">Painel Administrativo</h1>
           <p className="mt-1 text-gray-600">Bem-vindo, {user?.nome}!</p>
         </div>
-        <Link
-          to="/admin/carros/novo"
-          className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-        >
-          <PlusCircle size={20} />
-          Cadastrar Novo Carro
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            to="/admin/carros/novo"
+            className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          >
+            <PlusCircle size={20} />
+            Cadastrar Novo Carro
+          </Link>
+          <Link
+            to="/admin/users"
+            className="bg-gray-200 text-gray-800 font-semibold px-4 py-2 rounded-lg hover:bg-gray-300 flex items-center gap-2"
+          >
+            Gerenciar Usuários
+          </Link>
+        </div>
       </div>
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -124,10 +128,13 @@ export function Admin() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {/* --- ALTERAÇÃO APLICADA AQUI --- */}
-                    <Link to={`/admin/carros/editar/${carro.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
+                    <Link
+                      to={`/admin/carros/editar/${carro.id}`}
+                      className="text-blue-600 hover:text-blue-900 mr-4"
+                    >
                       <Edit size={20} />
                     </Link>
-                    
+
                     <button
                       onClick={() => handleDelete(carro.id)}
                       className="text-red-600 hover:text-red-900"
