@@ -19,7 +19,7 @@ export function Header() {
         {/* Lado Esquerdo: Logo */}
         <Link to="/" className="flex items-center gap-2 text-xl font-bold text-gray-900">
           <Car className="text-blue-600" />
-          <span>Sua loja</span>
+          <span>GB Motors</span>
         </Link>
         
         {/* Lado Direito: Links de Navegação e Botão de Ação */}
