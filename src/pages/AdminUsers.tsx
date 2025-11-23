@@ -8,6 +8,11 @@ export function AdminUsers() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [q, setQ] = useState("");
+
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [form, setForm] = useState({
     nome: "",
@@ -17,11 +22,21 @@ export function AdminUsers() {
   });
   const [isSaving, setIsSaving] = useState(false);
 
-  async function fetchUsers() {
+  async function fetchUsers(
+    p: number = page,
+    l: number = limit,
+    query: string = q
+  ) {
     try {
       setLoading(true);
-      const res = await api.get("/users");
-      setUsers(res.data);
+      const res = await api.get("/users", {
+        params: { page: p, limit: l, q: query },
+      });
+      const data = res.data;
+      setUsers(data.users || []);
+      setTotal(data.total || 0);
+      setPage(data.page || p);
+      setLimit(data.limit || l);
     } catch (err) {
       console.error(err);
       setError("Falha ao carregar usuários.");
@@ -33,6 +48,17 @@ export function AdminUsers() {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  function handleSearchChange(v: string) {
+    setQ(v);
+    setPage(1);
+    fetchUsers(1, limit, v);
+  }
+
+  function goToPage(p: number) {
+    setPage(p);
+    fetchUsers(p, limit, q);
+  }
 
   function startCreate() {
     setEditingUser(null);
@@ -55,11 +81,9 @@ export function AdminUsers() {
           role: form.role,
         };
         if (form.senha) payload.senha = form.senha;
-        const res = await api.put(`/users/${editingUser.id}`, payload);
-        setUsers((prev) =>
-          prev.map((u) => (u.id === editingUser.id ? res.data : u))
-        );
+        await api.put(`/users/${editingUser.id}`, payload);
         toast.success("Usuário atualizado.");
+        await fetchUsers(page, limit, q);
       } else {
         // create
         const payload: any = {
@@ -68,9 +92,10 @@ export function AdminUsers() {
           senha: form.senha,
           role: form.role,
         };
-        const res = await api.post(`/users`, payload);
-        setUsers((prev) => [res.data, ...prev]);
+        await api.post(`/users`, payload);
         toast.success("Usuário criado.");
+        // refresh to reflect server ordering and pagination
+        await fetchUsers(1, limit, q);
       }
       setEditingUser(null);
       setForm({ nome: "", email: "", senha: "", role: "STAFF" });
@@ -90,8 +115,8 @@ export function AdminUsers() {
     if (!window.confirm("Confirma exclusão deste usuário?")) return;
     try {
       await api.delete(`/users/${id}`);
-      setUsers((prev) => prev.filter((u) => u.id !== id));
       toast.success("Usuário excluído.");
+      await fetchUsers(page, limit, q);
     } catch (err) {
       console.error(err);
       toast.error("Erro ao excluir usuário.");
@@ -168,6 +193,30 @@ export function AdminUsers() {
       </div>
 
       <div className="bg-white shadow rounded overflow-hidden">
+        <div className="p-4 flex items-center gap-3">
+          <input
+            value={q}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder="Buscar por nome ou email"
+            className="border p-2 rounded flex-1"
+          />
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600">Por página:</label>
+            <select
+              value={limit}
+              onChange={(e) => {
+                const newLimit = Number(e.target.value);
+                setLimit(newLimit);
+                fetchUsers(1, newLimit, q);
+              }}
+              className="border p-2 rounded"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+            </select>
+          </div>
+        </div>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -224,6 +273,26 @@ export function AdminUsers() {
               ))}
           </tbody>
         </table>
+        <div className="p-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">Total: {total}</div>
+          <div className="flex items-center gap-2">
+            <button
+              disabled={page <= 1}
+              onClick={() => goToPage(page - 1)}
+              className="px-3 py-1 border rounded"
+            >
+              Anterior
+            </button>
+            <div className="px-3 py-1">{page}</div>
+            <button
+              disabled={page * limit >= total}
+              onClick={() => goToPage(page + 1)}
+              className="px-3 py-1 border rounded"
+            >
+              Próximo
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
