@@ -9,20 +9,27 @@ interface CarCardProps {
 export function CarCard({ carro }: CarCardProps) {
   const capaUrl = carro.images?.[0]?.url;
 
-  const precoFormatado = (carro.precoCentavos / 100).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  const precoFormatado = (carro.precoCentavos / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
   });
 
-  const kmFormatado = carro.km.toLocaleString('pt-BR');
+  const kmFormatado = carro.km.toLocaleString("pt-BR");
 
   return (
-    <Link to={`/carros/${carro.id}`} className="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+    <Link
+      to={`/carros/${carro.id}`}
+      className="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300"
+    >
       <div className="flex flex-col h-full">
         {/* Imagem do Carro */}
         <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
           {capaUrl ? (
-            <img src={capaUrl} alt={carro.titulo} className="w-full h-full object-cover" />
+            <img
+              src={capaUrl}
+              alt={carro.titulo}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <span className="text-gray-500">Sem imagem</span>
           )}
@@ -30,20 +37,24 @@ export function CarCard({ carro }: CarCardProps) {
 
         {/* Conteúdo do Card */}
         <div className="p-4 flex flex-col flex-1">
-          <h3 className="text-lg font-bold text-gray-900 flex-1">{carro.titulo}</h3>
+          <h3 className="text-lg font-bold text-gray-900 flex-1">
+            {carro.titulo}
+          </h3>
 
           <div className="mt-4 border-t pt-4 space-y-2 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Calendar size={16} className="text-gray-500" />
-              <span>{carro.ano}</span>
+              <span>Dosagem: {carro.ano}</span>
             </div>
             <div className="flex items-center gap-2">
               <Gauge size={16} className="text-gray-500" />
-              <span>{kmFormatado} km</span>
+              <span>Qtd: {kmFormatado}</span>
             </div>
             <div className="flex items-center gap-2 mt-4">
               <Tag size={18} className="text-blue-600" />
-              <span className="text-lg font-bold text-blue-700">{precoFormatado}</span>
+              <span className="text-lg font-bold text-blue-700">
+                {precoFormatado}
+              </span>
             </div>
           </div>
         </div>

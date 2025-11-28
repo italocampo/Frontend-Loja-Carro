@@ -5,7 +5,15 @@ import { api } from "../lib/api";
 import type { Car, CarImage } from "../types";
 import { Spinner } from "../components/Spinner";
 // 1. Corrija o nome do ícone de GasPump para Fuel
-import { Calendar, Gauge, Droplets, DoorOpen, Fuel, Settings, MessageSquare } from "lucide-react";
+import {
+  Calendar,
+  Gauge,
+  Droplets,
+  DoorOpen,
+  Fuel,
+  Settings,
+  MessageSquare,
+} from "lucide-react";
 
 // 3. Define um tipo local que estende Car com a nova propriedade
 type CarWithLink = Car & { linkWhatsApp: string };
@@ -16,7 +24,7 @@ export function CarDetail() {
   const [carro, setCarro] = useState<CarWithLink | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [mainImage, setMainImage] = useState<string>('');
+  const [mainImage, setMainImage] = useState<string>("");
 
   useEffect(() => {
     async function fetchCarro() {
@@ -25,14 +33,14 @@ export function CarDetail() {
         // Informa ao TypeScript que a resposta terá o tipo CarWithLink
         const response = await api.get<CarWithLink>(`/cars/${id}`);
         setCarro(response.data);
-        
+
         if (response.data.images && response.data.images.length > 0) {
           // 2. Usa o tipo CarImage em vez de 'any'
           const capa = response.data.images.find((img: CarImage) => img.capa);
           setMainImage(capa ? capa.url : response.data.images[0].url);
         }
       } catch (err) {
-        setError("Não foi possível carregar os detalhes do carro.");
+        setError("Não foi possível carregar os detalhes do medicamento.");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -52,12 +60,12 @@ export function CarDetail() {
   }
 
   if (!carro) {
-    return <p className="text-center">Carro não encontrado.</p>;
+    return <p className="text-center">Medicamento não encontrado.</p>;
   }
 
-  const precoFormatado = (carro.precoCentavos / 100).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+  const precoFormatado = (carro.precoCentavos / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
   });
 
   return (
@@ -69,19 +77,31 @@ export function CarDetail() {
         <div>
           <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden mb-4">
             {mainImage ? (
-              <img src={mainImage} alt={carro.titulo} className="w-full h-full object-cover" />
+              <img
+                src={mainImage}
+                alt={carro.titulo}
+                className="w-full h-full object-cover"
+              />
             ) : (
               <span className="text-gray-500">Sem imagem</span>
             )}
           </div>
           <div className="flex gap-2">
             {carro.images.map((image) => (
-              <div 
-                key={image.id} 
-                className={`w-20 h-20 rounded-md overflow-hidden cursor-pointer border-2 ${mainImage === image.url ? 'border-blue-600' : 'border-transparent'}`}
+              <div
+                key={image.id}
+                className={`w-20 h-20 rounded-md overflow-hidden cursor-pointer border-2 ${
+                  mainImage === image.url
+                    ? "border-blue-600"
+                    : "border-transparent"
+                }`}
                 onClick={() => setMainImage(image.url)}
               >
-                <img src={image.url} alt={`Thumbnail ${carro.titulo}`} className="w-full h-full object-cover" />
+                <img
+                  src={image.url}
+                  alt={`Thumbnail ${carro.titulo}`}
+                  className="w-full h-full object-cover"
+                />
               </div>
             ))}
           </div>
@@ -89,28 +109,45 @@ export function CarDetail() {
 
         {/* Detalhes e Contato */}
         <div>
-          <p className="text-3xl font-bold text-blue-700 mb-6">{precoFormatado}</p>
+          <p className="text-3xl font-bold text-blue-700 mb-6">
+            {precoFormatado}
+          </p>
 
           <div className="grid grid-cols-2 gap-4 border-t pt-6">
-            <div className="flex items-center gap-2 text-gray-700"><Calendar size={20} /> <strong>Ano:</strong> {carro.ano}</div>
-            <div className="flex items-center gap-2 text-gray-700"><Gauge size={20} /> <strong>KM:</strong> {carro.km.toLocaleString('pt-BR')}</div>
-            <div className="flex items-center gap-2 text-gray-700"><Droplets size={20} /> <strong>Cor:</strong> {carro.cor}</div>
-            <div className="flex items-center gap-2 text-gray-700"><DoorOpen size={20} /> <strong>Portas:</strong> {carro.portas}</div>
-            <div className="flex items-center gap-2 text-gray-700"><Settings size={20} /> <strong>Câmbio:</strong> {carro.cambio}</div>
-            {/* 1. Usa o ícone 'Fuel' corrigido */}
-            <div className="flex items-center gap-2 text-gray-700"><Fuel size={20} /> <strong>Combustível:</strong> {carro.combustivel}</div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Calendar size={20} /> <strong>Dosagem:</strong> {carro.ano}
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Gauge size={20} /> <strong>Quantidade:</strong>{" "}
+              {carro.km.toLocaleString("pt-BR")}
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Droplets size={20} /> <strong>Lote:</strong> {carro.cor}
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <DoorOpen size={20} /> <strong>Validade (meses):</strong>{" "}
+              {carro.portas}
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Settings size={20} /> <strong>Forma:</strong> {carro.cambio}
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Fuel size={20} /> <strong>Categoria:</strong> {carro.combustivel}
+            </div>
           </div>
 
           {carro.descricao && (
             <div className="mt-6 border-t pt-6">
               <h2 className="text-xl font-semibold mb-2">Descrição</h2>
-              <p className="text-gray-600 whitespace-pre-wrap">{carro.descricao}</p>
+              <p className="text-gray-600 whitespace-pre-wrap">
+                {carro.descricao}
+              </p>
             </div>
           )}
 
-          <a 
-            href={carro.linkWhatsApp} 
-            target="_blank" 
+          <a
+            href={carro.linkWhatsApp}
+            target="_blank"
             rel="noopener noreferrer"
             className="mt-8 w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 flex items-center justify-center gap-2 text-lg"
           >

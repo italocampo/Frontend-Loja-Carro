@@ -18,7 +18,7 @@ export function Admin() {
       const response = await api.get("/cars");
       setCarros(response.data);
     } catch (err) {
-      setError("Falha ao buscar os carros.");
+      setError("Falha ao buscar os produtos.");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -30,7 +30,7 @@ export function Admin() {
   }, []);
 
   async function handleDelete(carroId: string) {
-    if (!window.confirm("Tem certeza que deseja apagar este carro?")) {
+    if (!window.confirm("Tem certeza que deseja apagar este produto?")) {
       return;
     }
 
@@ -39,9 +39,9 @@ export function Admin() {
       setCarros((carrosAtuais) =>
         carrosAtuais.filter((carro) => carro.id !== carroId)
       );
-      toast.success("Carro apagado com sucesso!");
+      toast.success("Produto apagado com sucesso!");
     } catch (err) {
-      toast.error("Erro ao apagar o carro. Tente novamente.");
+      toast.error("Erro ao apagar o produto. Tente novamente.");
       console.error(err);
     }
   }
@@ -59,7 +59,7 @@ export function Admin() {
             className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
           >
             <PlusCircle size={20} />
-            Cadastrar Novo Carro
+            Cadastrar Novo Medicamento
           </Link>
           <Link
             to="/admin/users"
